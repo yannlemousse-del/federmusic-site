@@ -48,6 +48,25 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 .waitlist .f-row input{padding-left:20px;padding-right:20px}
 .waitlist .f-label{padding-left:18px}
 
+/* ---------- broken-outline fields (client reference image) ----------
+   The pill outline is drawn on the wrapper (.field::after) and interrupted: a gap in the top edge and a
+   second, mirrored gap in the bottom edge, offset to the other side. A mask hides those stretches of the
+   border only — the text, the fill and the caps stay intact. Placeholder and typed text are centred.
+   --g1/--g2 = top gap, --g3/--g4 = bottom gap (share of the width); narrower fields get tighter gaps so
+   the caps and a bit of straight edge always remain visible. */
+.field{--g1:20%;--g2:68%;--g3:32%;--g4:80%;position:relative}
+.f-row .field{--g1:25%;--g2:66%;--g3:34%;--g4:75%}
+.field::after{content:"";position:absolute;inset:0;border-radius:var(--r-pill);border:1px solid var(--line-strong);pointer-events:none;
+  -webkit-mask:linear-gradient(90deg,#000 0 var(--g1),transparent var(--g1) var(--g2),#000 var(--g2) 100%) top/100% 50% no-repeat,
+               linear-gradient(90deg,#000 0 var(--g3),transparent var(--g3) var(--g4),#000 var(--g4) 100%) bottom/100% 50% no-repeat;
+          mask:linear-gradient(90deg,#000 0 var(--g1),transparent var(--g1) var(--g2),#000 var(--g2) 100%) top/100% 50% no-repeat,
+               linear-gradient(90deg,#000 0 var(--g3),transparent var(--g3) var(--g4),#000 var(--g4) 100%) bottom/100% 50% no-repeat}
+.waitlist .field input{border-color:transparent;text-align:center}
+.waitlist .field input::placeholder{color:var(--ink-muted)}
+/* the shake moves the whole wrapper, so the outline follows the field */
+.waitlist .field input.is-invalid{animation:none}
+.field:has(input.is-invalid){animation:field-shake .45s ease}
+
 /* consent: a small round check, same crisp border as the inputs, monochrome */
 .waitlist .consent{display:flex;align-items:flex-start;gap:10px;margin-top:16px;
   font-size:12px;line-height:1.45;color:var(--ink-muted);cursor:pointer}

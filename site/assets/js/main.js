@@ -58,8 +58,10 @@
   }
   // le message d'erreur disparaît dès que le visiteur corrige quelque chose
   form.addEventListener('input', () => { if (status.classList.contains('is-error')) say(''); });
+  // la secousse est jouée par l'enveloppe .field (pour que le contour bouge avec le champ)
   form.addEventListener('animationend', e => {
-    if (e.animationName === 'field-shake') e.target.classList.remove('is-invalid');
+    if (e.animationName !== 'field-shake') return;
+    (e.target.matches('input') ? e.target : e.target.querySelector('input'))?.classList.remove('is-invalid');
   });
 
   /* ---------- soumission ---------- */

@@ -81,7 +81,7 @@ DNS chez GoDaddy (zone `federmusic.com`) :
 | A | `@` | `185.199.109.153` |
 | A | `@` | `185.199.110.153` |
 | A | `@` | `185.199.111.153` |
-| CNAME | `www` | `<compte-github>.github.io` |
+| CNAME | `www` | `yannlemousse-del.github.io` |
 
 Une fois le DNS propagé, activer *Enforce HTTPS* dans *Settings → Pages* du dépôt (le certificat est généré automatiquement par GitHub).
 

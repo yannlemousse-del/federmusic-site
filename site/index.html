@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<script>document.documentElement.classList.add('js')</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feder × Phantom — 16 janvier 2027</title>
+<meta name="description" content="Feder × Phantom, Paris, le 16 janvier 2027. Rejoins la liste pour être prévenu en premier.">
+<meta name="theme-color" content="#0d0d0d">
+<link rel="canonical" href="https://federmusic.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Feder × Phantom — 16 janvier 2027">
+<meta property="og:description" content="Paris, 16 janvier. Rejoins la liste pour être prévenu en premier.">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://federmusic.com/">
+<!-- TODO : ajouter og:image (1200x630) quand le visuel de partage est prêt -->
+
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/motion.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<!-- Fond vidéo : muted (sinon le téléphone bloque le démarrage), loop (boucle infinie),
+     autoplay (se lance à l'ouverture), playsinline (pas de plein écran sur iPhone). -->
+<video class="bg-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" tabindex="-1">
+  <source src="assets/video/background.mp4" type="video/mp4">
+</video>
+<div class="bg-scrim" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<main class="card">
+  <img class="brand-mark" src="assets/img/logo.png" width="835" height="224" alt="Feder">
+
+  <div class="brand-stack">
+    <h1><span class="line1 chrome">FEDER</span></h1>
+    <span class="x" aria-hidden="true">&times;</span>
+    <h1><span class="line2 chrome">PHANTOM</span></h1>
+  </div>
+
+  <div class="meta-stack">
+    <span class="city">PARIS</span>
+    <span class="date">16 JANVIER</span>
+  </div>
+
+  <hr class="hairline">
+
+  <form class="waitlist" novalidate>
+    <div class="f-row">
+      <div>
+        <label class="f-label" for="prenom">Pr&eacute;nom</label>
+        <input id="prenom" name="prenom" type="text" required maxlength="80" placeholder="Ton pr&eacute;nom" autocomplete="given-name">
+      </div>
+      <div>
+        <label class="f-label" for="nom">Nom</label>
+        <input id="nom" name="nom" type="text" required maxlength="80" placeholder="Ton nom" autocomplete="family-name">
+      </div>
+    </div>
+
+    <div class="f-group">
+      <label class="f-label" for="email">Email</label>
+      <input id="email" name="email" type="email" required maxlength="160" placeholder="Ton email" autocomplete="email">
+    </div>
+
+    <label class="consent">
+      <input name="consent" type="checkbox" required>
+      <span>J&rsquo;accepte de recevoir la newsletter de Feder. Tu peux te d&eacute;sinscrire &agrave; tout moment.</span>
+    </label>
+
+    <!-- anti-spam : champ invisible, les humains ne le remplissent pas -->
+    <div class="hp" aria-hidden="true">
+      <label>Site web <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <button class="waitlist-submit" type="submit">Reste connect&eacute;</button>
+    <p class="waitlist-status" role="status" aria-live="polite"></p>
+  </form>
+
+  <nav class="legal-links" aria-label="Informations l&eacute;gales">
+    <a href="confidentialite.html">Confidentialit&eacute;</a>
+    <a href="mentions-legales.html">Mentions l&eacute;gales</a>
+  </nav>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/background.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

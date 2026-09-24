@@ -1,0 +1,96 @@
+/* ==========================================================================
+   feder-ui · motion.css   (pair with motion.js)
+   Two layers:
+   1. The click/hover "ink flood + arrow swap + press" language, ported
+      verbatim in mechanism from soft-bento-ui / vor-ui and re-skinned to
+      black-and-neon-green. Nothing new invented here on purpose — it's
+      the same proven vocabulary, just retoned.
+   2. A few moves specific to a one-page hype teaser: the pill cloud
+      rotates/pops into place once on load, the sparkle mark has one
+      permitted slow ambient shimmer (the sole exception to "nothing idles"
+      — a night-life brand earns one small sign of life), and the signup
+      confirms quietly in place.
+   ========================================================================== */
+
+:root{
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --ease-back: cubic-bezier(.3,1.5,.5,1);
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ---------- 1a. ink flood (ported): fills from the pointer's entry point ---------- */
+.vbtn{position:relative;overflow:hidden;isolation:isolate;transition:transform .4s var(--ease-back),color .3s ease .06s}
+.vbtn::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--flood,var(--ink));
+  clip-path:circle(0 at var(--fx,50%) var(--fy,100%));transition:clip-path .55s var(--ease-out)}
+.vbtn:active{transform:scale(.95);transition-duration:90ms}
+@media (hover:hover){
+  .vbtn:hover::before{clip-path:circle(150% at var(--fx,50%) var(--fy,50%))}
+  .vbtn:hover{color:var(--flood-ink,var(--green-ink))}
+}
+.rsvp-btn.vbtn{--flood:var(--ink);--flood-ink:var(--bg)}
+.cta-btn.vbtn{--flood:var(--ink);--flood-ink:var(--bg)}
+.signup-submit.vbtn{--flood:var(--ink);--flood-ink:var(--bg)}
+
+/* ---------- 1b. arrow swap (ported): the icon leaves in its own direction, a twin enters opposite ---------- */
+.arrow-swap{position:relative;overflow:hidden}
+.arrow-swap .a{display:grid;place-items:center;width:100%;height:100%;transition:transform .5s var(--ease-out)}
+.arrow-swap .a--in{position:absolute;inset:0;transform:translateX(var(--in-x,-115%));transition-delay:.05s}
+@media (hover:hover){
+  .arrow-swap:hover .a:not(.a--in){transform:translateX(var(--out-x,115%))}
+  .arrow-swap:hover .a--in{transform:none}
+}
+
+/* ---------- 1c. press feedback for plain (non-flood) controls ---------- */
+.tag-pill{transition:transform .35s var(--ease-back)}
+.tag-pill:active{transform:rotate(var(--rot,0deg)) scale(.94)}
+
+/* ---------- 2a. pill cloud: drops in with real gravity physics ----------
+   The animation itself is JS-driven (motion.js's dropPills()) via the Web
+   Animations API, because a believable fall needs per-pill variation
+   (drop height, tumble angle, sideways drift, timing) that a single shared
+   @keyframes rule can't express without looking mechanical. This CSS only
+   sets the accessible baseline: pills sit at rest, and under .js they start
+   invisible so the drop can take over the very first paint.
+   A pill's resting transform is `rotate(var(--rot))`, set inline by
+   motion.js's pillRotations() — that's what both the no-JS state and the
+   final keyframe of the drop resolve to, so there's no visible seam. */
+.tag-pill{transform:rotate(var(--rot,0deg))}
+.js .tag-pill:not(.has-dropped){opacity:0}
+.pill-shadow{position:absolute;left:50%;bottom:-6px;width:70%;height:10px;transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(0,0,0,.45) 0%,transparent 72%);opacity:0;pointer-events:none;z-index:-1}
+@media (hover:hover){
+  .tag-pill:not(.is-icon):hover{transform:rotate(0deg) scale(1.06)}
+  .tag-pill.is-icon:hover{transform:rotate(0deg) scale(1.12)}
+}
+
+/* ---------- 2b. hero content: quiet rise on load, once ---------- */
+.js .hero-mark,.js .eyebrow,.js .hero>.hero-body>h1,.js .hero-sub,.js .event-line,.js .cta-row{opacity:0;transform:translateY(16px)}
+.js .hero.is-in .hero-mark{transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.js .hero.is-in .eyebrow{transition:opacity .5s var(--ease-out) .1s,transform .5s var(--ease-out) .1s}
+.js .hero.is-in h1{transition:opacity .6s var(--ease-out) .16s,transform .6s var(--ease-out) .16s}
+.js .hero.is-in .hero-sub{transition:opacity .5s var(--ease-out) .26s,transform .5s var(--ease-out) .26s}
+.js .hero.is-in .event-line{transition:opacity .5s var(--ease-out) .32s,transform .5s var(--ease-out) .32s}
+.js .hero.is-in .cta-row{transition:opacity .5s var(--ease-out) .38s,transform .5s var(--ease-out) .38s}
+.js .hero.is-in .hero-mark,.js .hero.is-in .eyebrow,.js .hero.is-in h1,
+.js .hero.is-in .hero-sub,.js .hero.is-in .event-line,.js .hero.is-in .cta-row{opacity:1;transform:none}
+
+/* ---------- 2c. the one ambient move: the hero's spark breathes very slowly ----------
+   Animated as its own real element (see icons-sprite.html's f-mark-eye + f-spark split) —
+   a <use>'s cloned content lives in a shadow tree that class selectors from the main
+   document can't reach, so this can only ever target a directly-used element, not a
+   class nested inside another symbol's shadow instance. */
+@keyframes spark-breathe{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.spark{transform-origin:center}
+@media (prefers-reduced-motion:no-preference){
+  .spark{animation:spark-breathe 3.2s ease-in-out infinite}
+}
+
+/* ---------- 2d. signup: quiet confirm, no flood, no confetti ---------- */
+.signup-field.is-confirming{border-color:var(--green)}
+.signup-submit[disabled]{opacity:.6;pointer-events:none}
+
+/* ---------- 2e. swap CTA button for the form ---------- */
+.cta-row.is-open .cta-btn{display:none}

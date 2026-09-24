@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Feder · page-level additions
+   tokens.css, motion.css and motion.js come untouched from the feder-ui skill
+   (default register: minimal monochrome card, no colour accent anywhere).
+   This file only holds what the skill's one-field waitlist doesn't ship:
+   the extra fields (prénom / nom), the consent line, and the plain text
+   pages (mentions légales, confidentialité, 404).
+   It only reuses skill tokens — no new colours, radii or fonts.
+   ========================================================================== */
+
+/* ---------- brand mark: the client's own logo (white PNG on transparent) ----------
+   Replaces the skill's placeholder eye. It is wider than the placeholder (about 3.7:1), so it
+   gets a wider box, and it is dimmed to the muted-ink level the skill uses for .brand-mark. */
+img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user-drag:none}
+
+/* ---------- background video: fixed, full-bleed, behind everything ----------
+   The clip is monochrome (liquid metal), so it stays inside the "no colour" rule.
+   .bg-scrim keeps small text legible over the bright highlights; the skill's own
+   .vignette (z-index 0) and .card (z-index 1) sit on top. */
+.bg-video{position:fixed;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;pointer-events:none;background:var(--bg)}
+.bg-video.is-top{z-index:-1}   /* la copie qui apparaît en fondu passe au-dessus (voir background.js) */
+.bg-scrim{position:fixed;inset:0;z-index:0;pointer-events:none;background:rgba(13,13,13,.5)}
+
+/* ---------- waitlist: prénom + nom on one row, email below ---------- */
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f-group + .f-group,.f-row + .f-group{margin-top:16px}
+.waitlist .f-row input{padding:0 14px}
+
+/* consent: a small square check, same crisp border as the inputs, monochrome */
+.waitlist .consent{display:flex;align-items:flex-start;gap:10px;margin-top:16px;
+  font-size:12px;line-height:1.45;color:var(--ink-muted);cursor:pointer}
+.waitlist .consent input{flex:none;width:16px;height:16px;padding:0;margin:1px 0 0;
+  appearance:none;-webkit-appearance:none;border-radius:3px;cursor:pointer;
+  background:var(--bg) center/11px no-repeat;transition:background-color .15s ease}
+.waitlist .consent input:checked{background-color:var(--ink);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d0d0d' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E")}
+.waitlist .consent a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+
+.waitlist .waitlist-submit{margin-top:18px}
+
+/* honeypot: real people never see or tab into it */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* errors stay colourless: same line, full ink instead of dim */
+.waitlist-status.is-error{color:var(--ink)}
+
+@media (max-width:360px){
+  .f-row{grid-template-columns:1fr}
+}
+
+/* ---------- legal links under the card ---------- */
+.legal-links{margin-top:22px;display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:center;font-size:12px;color:var(--ink-dim)}
+@media (hover:hover){.legal-links a:hover{color:var(--ink)}}
+
+/* ---------- text pages (legal, 404) ---------- */
+.doc{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column;align-items:center;padding:48px 24px 40px}
+.doc .brand-mark{margin-bottom:26px}
+.doc-body{width:100%;max-width:640px}
+.doc h1{font-family:var(--font-display);font-size:clamp(28px,6vw,44px);line-height:.98;text-transform:uppercase;text-align:center;margin-bottom:8px}
+.doc h2{font-family:var(--font-ui);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin:32px 0 9px}
+.doc p,.doc li{font-size:15px;line-height:1.6}
+.doc p+p{margin-top:12px}
+.doc a{text-decoration:underline;text-underline-offset:2px}
+.doc .todo{color:var(--ink-muted);border-bottom:1px dashed var(--ink-dim)}
+.doc .back{margin-top:44px;text-align:center;font-size:12px;color:var(--ink-dim)}
+.doc .back a{color:var(--ink-muted)}
+
+.notfound{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:64px 24px}
+.notfound .brand-mark{margin-bottom:22px}
+.notfound h1{font-family:var(--font-display);text-transform:uppercase;line-height:.92;font-size:clamp(46px,13vw,92px)}
+.notfound .waitlist-submit{display:inline-flex;align-items:center;justify-content:center;width:auto;padding:0 28px;margin-top:0}
+.notfound .hairline{margin:26px auto 28px}

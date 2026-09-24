@@ -133,12 +133,12 @@
      burst of identical, perfectly circular, brightly-coloured dots, which is
      what reads as a stock "particle effect" rather than dust actually settling. */
   function makeDustSprite() {
-    const s = 24, c = document.createElement('canvas'); c.width = c.height = s;
+    const s = 14, c = document.createElement('canvas'); c.width = c.height = s;
     const g = c.getContext('2d');
     const grad = g.createRadialGradient(s/2, s/2, 0, s/2, s/2, s/2);
     grad.addColorStop(0, 'rgba(255,255,255,.95)');
-    grad.addColorStop(.4, 'rgba(230,230,228,.55)');
-    grad.addColorStop(1, 'rgba(230,230,228,0)');
+    grad.addColorStop(.55, 'rgba(235,235,233,.5)');
+    grad.addColorStop(1, 'rgba(235,235,233,0)');
     g.fillStyle = grad; g.beginPath(); g.arc(s/2, s/2, s/2, 0, Math.PI*2); g.fill();
     return c;
   }
@@ -164,19 +164,19 @@
     const bw = btnBox.width, bh = btnBox.height;
 
     const rand = (a, b) => a + Math.random() * (b - a);
-    const N = 90;
+    const N = 150;
     const particles = Array.from({ length: N }, () => {
       const px = originX + rand(2, bw - 2), py = originY + rand(2, bh - 2);
       const outward = Math.atan2(py - (originY + bh/2), px - (originX + bw/2));
-      const burst = rand(10, 46);
+      const burst = rand(4, 16); // tight at first — dissipates, doesn't launch
       return {
         x: px, y: py,
-        vx: Math.cos(outward) * burst * rand(.2, .6) + rand(-8, 8),
-        vy: Math.sin(outward) * burst * rand(.1, .3) - rand(30, 70), // net upward drift, like dust catching light
-        size: rand(3, 9),
-        alpha: rand(.55, .95),
-        life: 0, maxLife: rand(900, 1500),
-        phase: rand(0, Math.PI * 2), swayAmp: rand(4, 16), swayFreq: rand(1.2, 2.4),
+        vx: Math.cos(outward) * burst * rand(.15, .45) + rand(-4, 4),
+        vy: Math.sin(outward) * burst * rand(.1, .25) - rand(16, 40), // gentle upward drift, like smoke
+        size: rand(1, 3), grow: rand(1.6, 2.6), // smoke widens slightly as it thins, never balloons
+        alpha: rand(.45, .85),
+        life: 0, maxLife: rand(650, 1050),
+        phase: rand(0, Math.PI * 2), swayAmp: rand(3, 11), swayFreq: rand(1.4, 2.8),
       };
     });
 
@@ -193,14 +193,14 @@
         if (p.life >= p.maxLife) continue;
         alive = true;
         const t = p.life / 1000;
-        p.vx *= 0.965; p.vy *= 0.985; p.vy -= 6 * (dt / 1000); // slight continued lift, air-current damping
+        p.vx *= 0.955; p.vy *= 0.975; p.vy -= 5 * (dt / 1000); // slight continued lift, air-current damping
         const sway = Math.sin(t * p.swayFreq * Math.PI + p.phase) * p.swayAmp * (dt / 1000);
         p.x += (p.vx * dt) / 1000 + sway;
         p.y += (p.vy * dt) / 1000;
         const lifeRatio = p.life / p.maxLife;
-        const a = p.alpha * (lifeRatio < .15 ? lifeRatio / .15 : 1 - (lifeRatio - .15) / .85);
+        const a = p.alpha * (lifeRatio < .1 ? lifeRatio / .1 : 1 - Math.pow((lifeRatio - .1) / .9, .7));
         ctx.globalAlpha = Math.max(0, a);
-        const s = p.size;
+        const s = p.size * (1 + (p.grow - 1) * lifeRatio); // thins out and spreads, like smoke, not a fixed dot
         ctx.drawImage(sprite, p.x - s/2, p.y - s/2, s, s);
       }
       ctx.globalAlpha = 1;

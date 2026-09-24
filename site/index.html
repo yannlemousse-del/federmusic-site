@@ -19,10 +19,10 @@
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/tokens.css?v=4">
-<link rel="stylesheet" href="assets/css/motion.css?v=4">
-<link rel="stylesheet" href="assets/css/style.css?v=4">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css?v=5">
+<link rel="stylesheet" href="assets/css/motion.css?v=5">
+<link rel="stylesheet" href="assets/css/style.css?v=5">
 </head>
 <body>
 <!-- Fond vidéo : muted (sinon le téléphone bloque le démarrage), loop (boucle infinie),
@@ -34,17 +34,15 @@
 <div class="vignette" aria-hidden="true"></div>
 
 <main class="card">
+  <!-- date : tout en haut, écriture fine -->
+  <p class="edge edge-top"><time datetime="2027-01-16">16/01/2027</time></p>
+
   <img class="brand-mark" src="assets/img/logo.png" width="835" height="224" alt="Feder">
 
   <div class="brand-stack">
     <h1><span class="line1 chrome">FEDER</span></h1>
     <span class="x" aria-hidden="true">&times;</span>
     <h1><span class="line2 chrome">PHANTOM</span></h1>
-  </div>
-
-  <div class="meta-stack">
-    <span class="city">PARIS</span>
-    <span class="date">16 JANVIER</span>
   </div>
 
   <hr class="hairline">
@@ -94,16 +92,21 @@
     <p class="waitlist-status" role="status" aria-live="polite"></p>
   </form>
 
-  <nav class="legal-links" aria-label="Informations l&eacute;gales">
-    <a href="confidentialite.html">Confidentialit&eacute;</a>
-    <a href="mentions-legales.html">Mentions l&eacute;gales</a>
-  </nav>
+  <!-- lieu : tout en bas, centré, lien vers l'Instagram du Phantom ; liens légaux discrets dessous -->
+  <footer class="edge edge-bottom">
+    <a class="venue" href="https://www.instagram.com/phantom.paris/?hl=fr" target="_blank" rel="noopener noreferrer"
+       aria-label="Le Phantom Paris sur Instagram (s'ouvre dans un nouvel onglet)">Le Phantom Paris</a>
+    <nav class="legal-links" aria-label="Informations l&eacute;gales">
+      <a href="confidentialite.html">Confidentialit&eacute;</a>
+      <a href="mentions-legales.html">Mentions l&eacute;gales</a>
+    </nav>
+  </footer>
 </main>
 
-<script src="assets/js/config.js?v=4"></script>
-<script src="assets/js/motion.js?v=4"></script>
-<script src="assets/js/background.js?v=4"></script>
-<script src="assets/js/form-dissolve.js?v=4"></script>
-<script src="assets/js/main.js?v=4"></script>
+<script src="assets/js/config.js?v=5"></script>
+<script src="assets/js/motion.js?v=5"></script>
+<script src="assets/js/background.js?v=5"></script>
+<script src="assets/js/form-dissolve.js?v=5"></script>
+<script src="assets/js/main.js?v=5"></script>
 </body>
 </html>

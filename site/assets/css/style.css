@@ -13,6 +13,22 @@
    gets a wider box, and it is dimmed to the muted-ink level the skill uses for .brand-mark. */
 img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user-drag:none}
 
+/* ---------- date (top) and venue (bottom): thin type framing the card ----------
+   Inter 300 in the skill's full ink colour: thin, but still clearly readable. Wide tracking keeps thin
+   strokes legible; a soft black halo (no visible shadow) holds the contrast when a bright reflection of the
+   background video passes behind the text. The card is a flex column: the first item pushes the content
+   down and the last one pushes it up, so the centre block stays centred between them. */
+.card{padding:calc(30px + env(safe-area-inset-top,0px)) 24px calc(26px + env(safe-area-inset-bottom,0px))}
+.edge{font-family:var(--font-ui);font-weight:300;color:var(--ink);text-align:center;
+  text-shadow:0 0 14px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.45)}
+.edge-top{margin:0 0 auto;padding-bottom:28px;font-size:16px;letter-spacing:.3em;font-variant-numeric:tabular-nums}
+.edge-top time{margin-right:-.3em}     /* cancels the trailing letter-space so the text is optically centred */
+.edge-bottom{display:flex;flex-direction:column;align-items:center;margin-top:auto;padding-top:28px}
+.venue{font-size:14px;letter-spacing:.2em;text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:6px;text-decoration-color:rgba(237,237,234,.35);transition:text-decoration-color .2s ease}
+@media (hover:hover){.venue:hover{text-decoration-color:var(--ink)}}
+.edge-bottom .legal-links{margin-top:14px}
+
 /* ---------- background video: fixed, full-bleed, behind everything ----------
    The clip is monochrome (liquid metal), so it stays inside the "no colour" rule.
    .bg-scrim keeps small text legible over the bright highlights; the skill's own

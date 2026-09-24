@@ -39,6 +39,7 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 /* ---------- the whole form disperses like smoke on a valid submit (see form-dissolve.js) ----------
    The button uses the skill's own dissolve; the fields, labels and consent line fade + blur out in a
    wave (--sd = per-block delay) while a canvas draws the same grey dust the skill uses. Monochrome. */
+.card{overflow-x:clip}   /* the smoke canvas is wider than the form: never let it create a sideways scroll on a phone */
 .form-stage{position:relative}
 .form-body [data-smoke]{transition:opacity .75s ease var(--sd,0ms),filter .75s ease var(--sd,0ms),transform .95s ease var(--sd,0ms)}
 .form-body.is-smoking{pointer-events:none}
@@ -50,6 +51,9 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 .form-done{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
   text-align:center;opacity:0;transition:opacity .6s ease}
 .form-done.is-in{opacity:1}
+/* an author `display:flex` beats the browser's own [hidden] rule, which left this invisible panel
+   sitting on top of the form and swallowing every click — so [hidden] must win explicitly */
+[hidden]{display:none!important}
 .done-msg{font-size:15px;font-weight:600;color:var(--ink)}
 .again{padding:6px 4px;font-size:12px;color:var(--ink-muted);text-decoration:underline;text-underline-offset:3px}
 @media (hover:hover){.again:hover{color:var(--ink)}}

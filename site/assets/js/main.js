@@ -56,6 +56,8 @@
     el.classList.add('is-invalid');
     el.focus();
   }
+  // le message d'erreur disparaît dès que le visiteur corrige quelque chose
+  form.addEventListener('input', () => { if (status.classList.contains('is-error')) say(''); });
   form.addEventListener('animationend', e => {
     if (e.animationName === 'field-shake') e.target.classList.remove('is-invalid');
   });

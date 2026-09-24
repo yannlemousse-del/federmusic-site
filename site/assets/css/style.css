@@ -48,6 +48,11 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 .waitlist .f-row input{padding-left:20px;padding-right:20px}
 .waitlist .f-label{padding-left:18px}
 
+/* ---------- outline width shared by the fields and the button ----------
+   Client request: half of the skill's 1px. On a phone (2-3 device pixels per CSS pixel) this is a true
+   hairline; a 1x desktop screen cannot draw less than one device pixel, so it rounds back up to 1px there. */
+:root{--bw:.5px}
+
 /* ---------- broken-outline fields (client reference image) ----------
    The pill outline is drawn on the wrapper (.field::after) and interrupted: a gap in the top edge and a
    second, mirrored gap in the bottom edge, offset to the other side. A mask hides those stretches of the
@@ -56,7 +61,7 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
    the caps and a bit of straight edge always remain visible. */
 .field{--g1:20%;--g2:68%;--g3:32%;--g4:80%;position:relative}
 .f-row .field{--g1:25%;--g2:66%;--g3:34%;--g4:75%}
-.field::after{content:"";position:absolute;inset:0;border-radius:var(--r-pill);border:1px solid var(--line-strong);pointer-events:none;
+.field::after{content:"";position:absolute;inset:0;border-radius:var(--r-pill);border:var(--bw) solid var(--line-strong);pointer-events:none;
   -webkit-mask:linear-gradient(90deg,#000 0 var(--g1),transparent var(--g1) var(--g2),#000 var(--g2) 100%) top/100% 50% no-repeat,
                linear-gradient(90deg,#000 0 var(--g3),transparent var(--g3) var(--g4),#000 var(--g4) 100%) bottom/100% 50% no-repeat;
           mask:linear-gradient(90deg,#000 0 var(--g1),transparent var(--g1) var(--g2),#000 var(--g2) 100%) top/100% 50% no-repeat,
@@ -73,6 +78,18 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 /* the shake moves the whole wrapper, so the outline follows the field */
 .waitlist .field input.is-invalid{animation:none}
 .field:has(input.is-invalid){animation:field-shake .45s ease}
+
+/* ---------- submit button: frosted glass too ----------
+   No fill any more — a blur of what is behind it, a full outline of the same width as the fields, and the
+   label in the theme's light ink (dark text on glass would be unreadable). The skill's inset highlights were
+   made for a filled button, so they are switched off; press feedback becomes a faint light wash. */
+.waitlist-submit{background:transparent;color:var(--ink);border:var(--bw) solid var(--line-strong);box-shadow:none;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  transition:transform .28s cubic-bezier(.3,1.5,.5,1),background-color .2s ease,border-color .3s ease}
+.waitlist-submit:active{box-shadow:none;background:rgba(255,255,255,.1)}
+@media (hover:hover){.waitlist-submit:hover{filter:none;background:rgba(255,255,255,.06)}}
+/* while it dissolves, the outline and the blur leave with the label */
+.waitlist-submit.is-dissolving{border-color:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
 
 /* consent: a small round check, same crisp border as the inputs, monochrome */
 .waitlist .consent{display:flex;align-items:flex-start;gap:10px;margin-top:16px;

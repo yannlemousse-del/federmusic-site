@@ -56,7 +56,7 @@ Tant que `signupEndpoint` est vide dans `assets/js/config.js`, le formulaire est
 6. Ouvrir l'URL `/exec` dans un navigateur : elle doit répondre `{"ok":true,"service":"feder-newsletter"}`.
 7. Remplir le formulaire sur le site : une ligne apparaît dans l'onglet **Inscrits** (créé automatiquement avec ses en-têtes).
 
-Colonnes : Date · Prénom · Nom · Email · Consentement · Source · Page · Statut.
+Les inscriptions arrivent dans l'onglet **Inscrits** (le seul onglet du Sheet). Colonnes : Date · Prénom · Nom · Email · Consentement · Source · Page · Statut.
 
 > Si le code du script change plus tard : **Déployer → Gérer les déploiements → modifier → Nouvelle version**. L'URL reste la même.
 

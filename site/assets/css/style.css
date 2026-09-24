@@ -22,7 +22,10 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 .edge{font-family:var(--font-ui);font-weight:300;color:var(--ink);text-align:center;
   text-shadow:0 0 14px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.45)}
 .edge-top{margin:0 0 auto;padding-bottom:28px;font-size:16px;letter-spacing:.3em;font-variant-numeric:tabular-nums}
-.edge-top time{margin-right:-.3em}     /* cancels the trailing letter-space so the text is optically centred */
+/* the date is set in Orbitron (Google Fonts, loaded in index.html). 400 is Orbitron's lightest weight. */
+.orbitron,.edge-top time{font-family:"Orbitron",var(--font-ui);font-optical-sizing:auto;font-weight:400;font-style:normal}
+.edge-top{font-size:15px;letter-spacing:.2em}
+.edge-top time{margin-right:-.2em}     /* cancels the trailing letter-space so the text is optically centred */
 .edge-bottom{display:flex;flex-direction:column;align-items:center;margin-top:auto;padding-top:28px}
 .venue{font-size:14px;letter-spacing:.2em;text-decoration:underline;text-decoration-thickness:1px;
   text-underline-offset:6px;text-decoration-color:rgba(237,237,234,.35);transition:text-decoration-color .2s ease}

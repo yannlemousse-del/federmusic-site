@@ -14,7 +14,11 @@
   const motion = window.FederMotion || {};
   const dissolve = window.FormDissolve;    // fumée du formulaire entier (form-dissolve.js)
 
-  const isLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+  // messages de confirmation (le mail de bienvenue sera branché à l'étape suivante)
+  const MSG_OK = 'Tu es bien inscrit(e), check tes mails !';
+  const MSG_DUPLICATE = 'Tu es déjà inscrit(e). À bientôt !';
+
+  const isLocal =['localhost', '127.0.0.1', ''].includes(location.hostname);
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   const say = (msg, kind) => {
@@ -70,7 +74,7 @@
     const data = new FormData(form);
 
     // honeypot rempli = bot : on fait semblant que tout va bien
-    if (data.get('website')) { say('Tu es sur la liste. À bientôt.', 'ok'); return; }
+    if (data.get('website')) { say(MSG_OK, 'ok'); return; }
 
     const problem = firstProblem(data);
     if (problem) { shake(problem[0]); say(problem[1], 'error'); return; }
@@ -101,7 +105,7 @@
       }
       say('');
       form.reset();
-      const message = out.duplicate ? 'Tu es déjà sur la liste. À bientôt.' : 'Tu es sur la liste. À bientôt.';
+      const message = out.duplicate ? MSG_DUPLICATE : MSG_OK;
       if (dissolve) dissolve.showDone(form, message);
       else { btn.classList.remove('is-dissolving'); say(message, 'ok'); }
     };

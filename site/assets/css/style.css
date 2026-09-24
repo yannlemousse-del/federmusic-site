@@ -36,8 +36,6 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d0d0d' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E")}
 .waitlist .consent a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 
-.waitlist .waitlist-submit{margin-top:18px}
-
 /* honeypot: real people never see or tab into it */
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 

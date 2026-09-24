@@ -122,6 +122,109 @@
     io.observe(cloud);
   }
 
+  /* 3. dust dissolve: a valid submit crumbles the button to drifting dust instead
+     of just disabling it. Canvas-based (not N individually-animated DOM pieces) —
+     on a phone this is the difference between a smooth burst and dropped frames.
+     A single soft dust-mote sprite is rendered once to an offscreen canvas and
+     then just drawImage'd per particle per frame — building a fresh radial
+     gradient per particle per frame is the expensive way to do this.
+     Motion, not confetti: each particle gets its own upward drift + gentle
+     sideways sine sway + damping, monochrome, sized/opacity-varied — never a
+     burst of identical, perfectly circular, brightly-coloured dots, which is
+     what reads as a stock "particle effect" rather than dust actually settling. */
+  function makeDustSprite() {
+    const s = 24, c = document.createElement('canvas'); c.width = c.height = s;
+    const g = c.getContext('2d');
+    const grad = g.createRadialGradient(s/2, s/2, 0, s/2, s/2, s/2);
+    grad.addColorStop(0, 'rgba(255,255,255,.95)');
+    grad.addColorStop(.4, 'rgba(230,230,228,.55)');
+    grad.addColorStop(1, 'rgba(230,230,228,0)');
+    g.fillStyle = grad; g.beginPath(); g.arc(s/2, s/2, s/2, 0, Math.PI*2); g.fill();
+    return c;
+  }
+
+  function dissolveButton(btn, { onDone } = {}) {
+    const wrap = btn.closest('.submit-wrap') || btn.parentElement;
+    const canvas = wrap.querySelector('.dust-canvas');
+    if (reduced() || !canvas || typeof canvas.getContext !== 'function') {
+      btn.classList.add('is-dissolving'); onDone && onDone(); return;
+    }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) { btn.classList.add('is-dissolving'); onDone && onDone(); return; }
+    if (!dissolveButton._sprite) dissolveButton._sprite = makeDustSprite();
+    const sprite = dissolveButton._sprite;
+
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const cw = canvas.clientWidth, ch = canvas.clientHeight;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const btnBox = btn.getBoundingClientRect(), canBox = canvas.getBoundingClientRect();
+    const originX = btnBox.left - canBox.left, originY = btnBox.top - canBox.top;
+    const bw = btnBox.width, bh = btnBox.height;
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const N = 90;
+    const particles = Array.from({ length: N }, () => {
+      const px = originX + rand(2, bw - 2), py = originY + rand(2, bh - 2);
+      const outward = Math.atan2(py - (originY + bh/2), px - (originX + bw/2));
+      const burst = rand(10, 46);
+      return {
+        x: px, y: py,
+        vx: Math.cos(outward) * burst * rand(.2, .6) + rand(-8, 8),
+        vy: Math.sin(outward) * burst * rand(.1, .3) - rand(30, 70), // net upward drift, like dust catching light
+        size: rand(3, 9),
+        alpha: rand(.55, .95),
+        life: 0, maxLife: rand(900, 1500),
+        phase: rand(0, Math.PI * 2), swayAmp: rand(4, 16), swayFreq: rand(1.2, 2.4),
+      };
+    });
+
+    btn.classList.add('is-dissolving');
+    canvas.style.opacity = '1';
+    const start = performance.now();
+    let raf;
+    const step = now => {
+      const dt = Math.min(32, now - (step._t || now)); step._t = now;
+      ctx.clearRect(0, 0, cw, ch);
+      let alive = false;
+      for (const p of particles) {
+        p.life += dt;
+        if (p.life >= p.maxLife) continue;
+        alive = true;
+        const t = p.life / 1000;
+        p.vx *= 0.965; p.vy *= 0.985; p.vy -= 6 * (dt / 1000); // slight continued lift, air-current damping
+        const sway = Math.sin(t * p.swayFreq * Math.PI + p.phase) * p.swayAmp * (dt / 1000);
+        p.x += (p.vx * dt) / 1000 + sway;
+        p.y += (p.vy * dt) / 1000;
+        const lifeRatio = p.life / p.maxLife;
+        const a = p.alpha * (lifeRatio < .15 ? lifeRatio / .15 : 1 - (lifeRatio - .15) / .85);
+        ctx.globalAlpha = Math.max(0, a);
+        const s = p.size;
+        ctx.drawImage(sprite, p.x - s/2, p.y - s/2, s, s);
+      }
+      ctx.globalAlpha = 1;
+      if (alive) { raf = requestAnimationFrame(step); }
+      else {
+        canvas.style.opacity = '0'; ctx.clearRect(0, 0, cw, ch);
+        cancelAnimationFrame(raf);
+        onDone && onDone();
+      }
+    };
+    raf = requestAnimationFrame(step);
+    // safety net in case a particle math edge case keeps `alive` true forever
+    setTimeout(() => { if (raf) cancelAnimationFrame(raf); canvas.style.opacity = '0'; onDone && onDone(); }, Math.max(1800, ...particles.map(p=>p.maxLife)) + 200);
+  }
+
+  /* simple, permissive "email or phone" check — this register's field accepts either */
+  function isValidContact(v) {
+    v = (v || '').trim();
+    if (!v) return false;
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return true;
+    const digits = v.replace(/[^0-9]/g, '');
+    return /^[0-9+()\s.-]{6,}$/.test(v) && digits.length >= 6;
+  }
+
   /* 2d. signup form: reveal the field on CTA click, submit with a quiet confirm state */
   function signup() {
     const ctaRow = document.querySelector('.cta-row');
@@ -156,6 +259,6 @@
   function init() {
     floodOrigin(); arrowSwap(); pillRotations(); heroReveal(); dropPills(); signup();
   }
-  window.FederMotion = { dropPills };
+  window.FederMotion = { dropPills, dissolveButton, isValidContact };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

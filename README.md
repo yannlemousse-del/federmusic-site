@@ -66,7 +66,7 @@ Le script refuse les emails invalides, ignore les doublons (même email) et neut
 
 - [ ] Compléter `site/mentions-legales.html` et `site/confidentialite.html` (repérer les `[…]` soulignés en pointillés).
 - [ ] Vérifier le contenu de l'événement dans `site/index.html` (date, lieu, textes : ce sont ceux de l'exemple du skill).
-- [ ] Ajouter une image de partage `og:image` (1200×630) dans `site/index.html`.
+- [x] Image de partage `site/assets/img/og-image.jpg` (1200×630, JPEG 98 %) branchée dans `site/index.html` (og:image + twitter:card).
 - [x] `signupEndpoint` renseigné dans `config.js` (Sheet branché et testé).
 - [x] Domaine : `canonical`, `og:url`, `sitemap.xml`, `robots.txt` et `CNAME` pointent sur federmusic.com.
 

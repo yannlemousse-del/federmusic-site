@@ -1,8 +1,9 @@
 /* Feder · inscription à la newsletter
    Envoie prénom / nom / email au Web App Google Apps Script, qui écrit dans le Sheet.
-   Le comportement du bouton vient de feder-ui (motion.js) :
    - envoi invalide : le champ fautif tremble + une ligne de message (pas de bulle native) ;
-   - envoi valide   : le bouton part en poussière (FederMotion.dissolveButton), puis confirmation. */
+   - envoi valide   : TOUT le formulaire part en fumée (form-dissolve.js ; le bouton avec l'effet
+                      feder-ui FederMotion.dissolveButton), puis la confirmation prend sa place ;
+   - échec d'envoi : le formulaire revient avec ce qui était saisi. */
 (() => {
   const cfg = window.FEDER_CONFIG || {};
   const form = document.querySelector('.waitlist');
@@ -11,6 +12,7 @@
   const btn = form.querySelector('.waitlist-submit');
   const status = form.querySelector('.waitlist-status');
   const motion = window.FederMotion || {};
+  const dissolve = window.FormDissolve;    // fumée du formulaire entier (form-dissolve.js)
 
   const isLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -83,24 +85,31 @@
     // la requête part en même temps que l'animation ; on attend les deux avant de conclure
     const request = send(payload).then(out => ({ out }), err => ({ err }));
 
-    let finished = false;                  // dissolveButton peut appeler onDone deux fois
     const finish = async () => {
-      if (finished) return;
-      finished = true;
       say('Enregistrement…');
       const { out, err } = await request;
-      btn.classList.remove('is-dissolving'); // le bouton revient : un second envoi reste possible
       btn.disabled = false;
-      if (err || !out || !out.ok) {
+      if (err || !out || !out.ok) {        // échec : le formulaire revient tel quel, avec ce qui était saisi
         console.error('[feder] inscription échouée', err || out);
+        if (dissolve) dissolve.restore(form); else btn.classList.remove('is-dissolving');
         say('Une erreur est survenue. Réessaie dans un instant.', 'error');
         return;
       }
-      say(out.duplicate ? 'Tu es déjà sur la liste. À bientôt.' : 'Tu es sur la liste. À bientôt.', 'ok');
+      say('');
       form.reset();
+      const message = out.duplicate ? 'Tu es déjà sur la liste. À bientôt.' : 'Tu es sur la liste. À bientôt.';
+      if (dissolve) dissolve.showDone(form, message);
+      else { btn.classList.remove('is-dissolving'); say(message, 'ok'); }
     };
 
-    if (motion.dissolveButton) motion.dissolveButton(btn, { onDone: finish });
-    else finish();
+    // tout le formulaire part en fumée (le bouton avec l'effet du skill, le reste en vague)
+    if (dissolve) dissolve.run(form, btn).then(finish);
+    else if (motion.dissolveButton) {
+      let once = false;                    // dissolveButton peut appeler onDone deux fois
+      motion.dissolveButton(btn, { onDone: () => { if (!once) { once = true; finish(); } } });
+    } else finish();
   });
+
+  // « Inscrire quelqu'un d'autre » : la confirmation s'efface, le formulaire revient
+  form.querySelector('.again')?.addEventListener('click', () => { dissolve ? dissolve.reopen(form) : null; });
 })();

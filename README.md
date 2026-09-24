@@ -26,7 +26,8 @@ feder-site/
         │   ├── config.js         ← URL du Google Sheet (seul fichier à éditer)
         │   ├── motion.js         animations feder-ui (inchangé)
         │   ├── background.js     fond vidéo : fondu de fin de boucle, relance, reduced-motion
-        │   └── main.js           envoi du formulaire vers Google Sheets
+        │   ├── form-dissolve.js  le formulaire entier part en fumée à l'envoi (s'appuie sur motion.js)
+        │   └── main.js           validation + envoi du formulaire vers Google Sheets
         ├── img/logo.png          logo Feder (blanc, fond transparent) + favicon.png
         └── video/background.mp4  fond vidéo en boucle (1080x1920, 8 s, ~4,8 Mo)
 ```

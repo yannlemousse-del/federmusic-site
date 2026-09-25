@@ -15,8 +15,13 @@
 
 const SHEET_ID = '1C3I5ttV_CF9n6BE_9oOEAF48eA4UBbRnOOuf__PbBd0';
 const SHEET_NAME = 'Inscrits';
-const HEADERS = ['Date', 'Prénom', 'Nom', 'Email', 'Consentement', 'Source', 'Page', 'Statut', 'Mail'];
+const HEADERS = ['Date', 'Prénom', 'Nom', 'Email', 'Consentement', 'Source', 'Page', 'Statut', 'Mail', 'Laylo'];
+const COL_MAIL = 9, COL_LAYLO = 10;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+// --- Laylo : la liste d'envoi. La clé API est dans Paramètres du projet > Propriétés du script > LAYLO_API_KEY (jamais dans le code) ---
+const LAYLO_URL = 'https://laylo.com/api/graphql';
+const TEST_LAYLO_EMAIL = 'yannlemousse+laylo@gmail.com';
 
 // --- mail de bienvenue ---
 const MAIL_NAME = 'FEDERATION';
@@ -183,15 +188,18 @@ function doPost(e) {
       clean_(p.source, 60),
       clean_(p.page, 120),
       'abonné',
+      '',
       ''
     ]);
     const row = sheet.getLastRow();
 
-    // Mail de bienvenue : jamais bloquant pour l'inscription, et le résultat est noté dans la colonne « Mail »
+    // Laylo puis mail de bienvenue : jamais bloquants pour l'inscription ; le résultat de chacun est noté dans le Sheet
+    const laylo = subscribeLaylo_(email);
     const mail = sendWelcome_(email);
-    sheet.getRange(row, HEADERS.length).setValue(mail);
+    sheet.getRange(row, COL_MAIL).setValue(mail);
+    sheet.getRange(row, COL_LAYLO).setValue(laylo);
 
-    return json_({ ok: true, mail: mail });
+    return json_({ ok: true, mail: mail, laylo: laylo });
   } catch (err) {
     console.error(err);
     return json_({ ok: false, error: 'serveur' });
@@ -203,6 +211,54 @@ function doPost(e) {
 /** Ouvrir l'URL /exec dans un navigateur : simple test que le déploiement répond. */
 function doGet() {
   return json_({ ok: true, service: 'feder-newsletter' });
+}
+
+/** Inscrit l'email dans la liste Laylo. Retourne 'ok', 'non configuré', 'erreur 401' (clé refusée)… La clé n'est jamais écrite dans les journaux. */
+function subscribeLaylo_(email) {
+  const key = PropertiesService.getScriptProperties().getProperty('LAYLO_API_KEY');
+  if (!key) return 'non configuré';
+  try {
+    const res = UrlFetchApp.fetch(LAYLO_URL, {
+      method: 'post',
+      contentType: 'application/json',
+      muteHttpExceptions: true,
+      headers: { Authorization: 'Bearer ' + String(key).trim() },
+      payload: JSON.stringify({
+        query: 'mutation($email: String) { subscribeToUser(email: $email) }',
+        variables: { email: email }
+      })
+    });
+    const code = res.getResponseCode();
+    const body = res.getContentText();
+    let j = {};
+    try { j = JSON.parse(body); } catch (_) {}
+    if (code === 200 && !j.errors && j.data && j.data.subscribeToUser !== false && j.data.subscribeToUser != null) return 'ok';
+    console.error('laylo', code, body.slice(0, 300));
+    return 'erreur ' + code;
+  } catch (err) {
+    console.error('laylo', err);
+    return 'erreur';
+  }
+}
+
+/** À lancer À LA MAIN : inscrit une adresse de test dans Laylo et affiche le résultat dans le journal d'exécution. */
+function testLaylo() {
+  const r = subscribeLaylo_(TEST_LAYLO_EMAIL);
+  console.log('Test Laylo vers ' + TEST_LAYLO_EMAIL + ' : ' + r);
+  return r;
+}
+
+/** À lancer À LA MAIN : retente Laylo pour les lignes du Sheet dont la colonne « Laylo » commence par « erreur ». */
+function resyncLaylo() {
+  const sheet = getSheet_();
+  const last = sheet.getLastRow();
+  if (last < 2) return;
+  const rows = sheet.getRange(2, 1, last - 1, COL_LAYLO).getValues();
+  rows.forEach((r, i) => {
+    if (String(r[COL_LAYLO - 1] || '').indexOf('erreur') === 0) {
+      sheet.getRange(i + 2, COL_LAYLO).setValue(subscribeLaylo_(String(r[3])));
+    }
+  });
 }
 
 /** Envoie le mail de bienvenue. Retourne 'envoyé', 'limite', 'quota' ou 'erreur'. */
@@ -254,6 +310,9 @@ function getSheet_() {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  } else if (!sheet.getRange(1, COL_LAYLO).getValue()) {
+    // Sheet créé avant Laylo : on ajoute la colonne manquante
+    sheet.getRange(1, COL_LAYLO).setValue(HEADERS[COL_LAYLO - 1]).setFontWeight('bold');
   }
   return sheet;
 }

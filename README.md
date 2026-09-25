@@ -113,3 +113,12 @@ Le Sheet sert de base de contacts. Pour envoyer, on peut exporter la colonne Ema
 **Boucle sans à-coup :** `background.js` lance une seconde copie de la vidéo 2,1 s avant la fin de la première (fondu de 1,4 s + 0,7 s de marge) et la fait apparaître en fondu enchaîné (constante `FADE` en haut du fichier). La boucle native (`loop`) reste active en filet de sécurité, et sans JavaScript la vidéo tourne quand même. Pour une boucle parfaitement propre, on peut aussi exporter la vidéo avec un début et une fin identiques.
 
 Pour changer de vidéo, remplacer le fichier en gardant le même nom (idéalement < 5 Mo, en H.264/MP4). Un voile sombre (`.bg-scrim` dans `style.css`, opacité 0.5) garde le texte lisible : l'ajuster si la nouvelle vidéo est plus claire ou plus sombre. Si le visiteur a demandé « moins d'animations » sur son appareil, la vidéo reste sur sa première image.
+
+## Laylo (liste d'envoi)
+
+Chaque nouvelle inscription est aussi envoyée à **Laylo** (compte « Federation ») par l'API, depuis le script Apps Script (`subscribeLaylo_`). Le résultat est noté dans la colonne « Laylo » du Sheet (`ok`, `non configuré`, `erreur 401`…).
+
+- **Clé API :** dans l'éditeur Apps Script, *Paramètres du projet → Propriétés du script → `LAYLO_API_KEY`*. Elle n'est jamais dans le code ni dans le dépôt. Pour la changer : regénérer une clé dans Laylo (*Settings → Integrations → API Keyring*) et remplacer la valeur.
+- **Un seul identifiant par appel :** Laylo ne reçoit que l'email (pas le prénom ni le nom, qui restent dans le Sheet).
+- **Fonctions à lancer à la main** (menu Exécuter de l'éditeur) : `testLaylo` (inscrit `yannlemousse+laylo@gmail.com` pour tester) et `resyncLaylo` (retente les lignes dont la colonne « Laylo » commence par « erreur »).
+- **Autorisation :** l'appel à Laylo demande l'accès « services externes » du compte Federation, à accorder une fois (voir la note sur la fenêtre d'autorisation plus haut).

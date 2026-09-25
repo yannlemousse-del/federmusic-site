@@ -32,6 +32,40 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 @media (hover:hover){.venue:hover{text-decoration-color:var(--ink)}}
 .edge-bottom .legal-links{margin-top:14px}
 
+/* ---------- perks ticker: what signing up unlocks ----------
+   A full-bleed tape between the wordmark and the form (it replaces the small hairline). Thin Inter in the
+   theme's ink, the logo's four-point spark as the separator, a very slow drift, and the ends fade out.
+   Under .js the group is cloned by main.js as often as the screen width needs, and the track slides by
+   exactly one group (--gw) in a loop, at a constant speed (--dur).
+   With prefers-reduced-motion it stops and shows a single static, centred group. */
+.marquee{width:100vw;max-width:none;align-self:center;margin:26px 0 28px;overflow:hidden;
+  border-top:var(--bw) solid var(--line);border-bottom:var(--bw) solid var(--line);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee-track{display:flex;width:max-content;margin:0 auto}
+.marquee-group{display:flex;align-items:center;flex:none;list-style:none;padding:0;margin:0}
+.marquee-group li{flex:none;padding:13px 20px;font-family:var(--font-ui);font-weight:300;font-size:12px;line-height:1;
+  letter-spacing:.32em;text-transform:uppercase;color:var(--ink);white-space:nowrap;
+  text-shadow:0 0 12px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.45)}
+.marquee-group li.sep{padding:13px 0;display:flex;align-items:center}
+.spark-sep{width:11px;height:11px;color:var(--ink-muted)}
+@keyframes marquee-slide{to{transform:translateX(calc(var(--gw,0px) * -1))}}
+.js .marquee-track{margin:0;animation:marquee-slide var(--dur,34s) linear infinite}
+@media (hover:hover){.marquee:hover .marquee-track{animation-play-state:paused}}
+@media (prefers-reduced-motion:reduce){
+  .js .marquee-track{animation:none;margin:0 auto}
+  .marquee-group[aria-hidden="true"]{display:none}
+  .marquee{-webkit-mask-image:none;mask-image:none}
+  .marquee-group{flex-wrap:wrap;justify-content:center}
+}
+
+/* ---------- confirmation: the perks, once the person is in ---------- */
+.done-lead{max-width:24ch;font-size:13px;line-height:1.5;color:var(--ink-muted)}
+.perks{list-style:none;margin:2px 0 6px;padding:0;display:grid;gap:2px}
+.perks li{font-family:var(--font-ui);font-weight:700;font-size:18px;line-height:1.55;color:var(--ink);
+  opacity:0;transform:translateY(6px);transition:opacity .5s ease calc(.35s + var(--i) * .11s),transform .5s ease calc(.35s + var(--i) * .11s)}
+.form-done.is-in .perks li{opacity:1;transform:none}
+
 /* ---------- background video: fixed, full-bleed, behind everything ----------
    The clip is monochrome (liquid metal), so it stays inside the "no colour" rule.
    .bg-scrim keeps small text legible over the bright highlights; the skill's own

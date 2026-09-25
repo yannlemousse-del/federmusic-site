@@ -121,3 +121,26 @@
   // « Inscrire quelqu'un d'autre » : la confirmation s'efface, le formulaire revient
   form.querySelector('.again')?.addEventListener('click', () => { dissolve ? dissolve.reopen(form) : null; });
 })();
+
+/* Bandeau des avantages : le groupe est recopié autant de fois qu'il faut pour couvrir l'écran (+1), quelle que soit
+   la largeur, et la piste glisse d'exactement un groupe (--gw) à vitesse constante (~25 px/s).
+   La 1re copie reste lisible par les lecteurs d'écran ; les autres sont masquées (aria-hidden). */
+(() => {
+  const track = document.querySelector('.marquee-track');
+  const first = track && track.querySelector('.marquee-group');
+  if (!first) return;
+  const build = () => {
+    const w = first.getBoundingClientRect().width;
+    if (!w) return;
+    const needed = Math.ceil(window.innerWidth / w) + 1;
+    while (track.children.length < needed) {
+      const c = first.cloneNode(true); c.setAttribute('aria-hidden', 'true'); track.appendChild(c);
+    }
+    while (track.children.length > needed) track.lastElementChild.remove();
+    track.style.setProperty('--gw', w + 'px');
+    track.style.setProperty('--dur', (w / 25).toFixed(1) + 's');
+  };
+  build();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);   // la largeur change quand la police arrive
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 150); });
+})();

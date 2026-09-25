@@ -15,7 +15,7 @@
   const dissolve = window.FormDissolve;    // fumée du formulaire entier (form-dissolve.js)
 
   // messages de confirmation (le mail de bienvenue sera branché à l'étape suivante)
-  const MSG_OK = 'Tu es bien inscrit(e), check tes mails !';
+  const MSG_OK = 'Tu es bien inscrit(e), check tes mails (et tes spams) !';
   const MSG_DUPLICATE = 'Tu es déjà inscrit(e). À bientôt !';
 
   const isLocal =['localhost', '127.0.0.1', ''].includes(location.hostname);

@@ -6,7 +6,7 @@
  * Déploiement : application Web, « Exécuter en tant que : moi », « Accès : tout le monde ».
  *
  * Le site envoie un POST (prenom, nom, email, consent, source, page).
- * Le script valide, dédoublonne sur l'email, ajoute une ligne, puis envoie le mail de bienvenue.
+ * Le script valide, met à jour la ligne si l'email existe déjà (sinon en ajoute une), puis envoie le mail de bienvenue.
  * Un échec d'envoi de mail n'empêche jamais l'inscription.
  *
  * Fichier généré : ne pas modifier Code.gs à la main — éditer Code.template.gs et welcome-email.html
@@ -75,12 +75,18 @@ function doPost(e) {
 
     const sheet = getSheet_();
 
-    // Déjà inscrit ? (colonne Email = D) -> pas de nouvelle ligne, pas de nouveau mail
+    // Déjà inscrit ? (colonne Email = D) -> pas de nouvelle ligne : on met la ligne à jour et on renvoie l'adresse à Laylo.
+    // Le visiteur voit la confirmation normale, il peut donc se réinscrire autant de fois qu'il veut (tests, changement d'avis).
     const last = sheet.getLastRow();
     if (last > 1) {
       const emails = sheet.getRange(2, 4, last - 1, 1).getValues().flat();
-      if (emails.some(v => String(v).toLowerCase() === email)) {
-        return json_({ ok: true, duplicate: true });
+      const idx = emails.findIndex(v => String(v).toLowerCase() === email);
+      if (idx >= 0) {
+        const row = idx + 2;
+        const laylo = subscribeLaylo_(email);
+        sheet.getRange(row, 1).setValue(new Date());
+        sheet.getRange(row, COL_LAYLO).setValue(laylo);
+        return json_({ ok: true, repeat: true, laylo: laylo });
       }
     }
 

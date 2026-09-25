@@ -90,19 +90,13 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
    hairline; a 1x desktop screen cannot draw less than one device pixel, so it rounds back up to 1px there. */
 :root{--bw:.5px}
 
-/* ---------- broken-outline fields (client reference image) ----------
-   The pill outline is drawn on the wrapper (.field::after) and interrupted: a gap in the top edge and a
-   second, mirrored gap in the bottom edge, offset to the other side. A mask hides those stretches of the
-   border only — the text, the fill and the caps stay intact. Placeholder and typed text are centred.
-   --g1/--g2 = top gap, --g3/--g4 = bottom gap (share of the width); narrower fields get tighter gaps so
-   the caps and a bit of straight edge always remain visible. */
-.field{--g1:20%;--g2:68%;--g3:32%;--g4:80%;position:relative}
-.f-row .field{--g1:25%;--g2:66%;--g3:34%;--g4:75%}
-.field::after{content:"";position:absolute;inset:0;border-radius:var(--r-pill);border:var(--bw) solid var(--line-strong);pointer-events:none;
-  -webkit-mask:linear-gradient(90deg,#000 0 var(--g1),transparent var(--g1) var(--g2),#000 var(--g2) 100%) top/100% 50% no-repeat,
-               linear-gradient(90deg,#000 0 var(--g3),transparent var(--g3) var(--g4),#000 var(--g4) 100%) bottom/100% 50% no-repeat;
-          mask:linear-gradient(90deg,#000 0 var(--g1),transparent var(--g1) var(--g2),#000 var(--g2) 100%) top/100% 50% no-repeat,
-               linear-gradient(90deg,#000 0 var(--g3),transparent var(--g3) var(--g4),#000 var(--g4) 100%) bottom/100% 50% no-repeat}
+/* ---------- fields: full pill outline ----------
+   The outline is drawn on the wrapper (.field::after) rather than on the input, so the shake animation (which
+   moves the wrapper) carries it along. It is complete all the way round — the interrupted version from the
+   client reference image was dropped on request (it is in the git history, commit "Champs à contour interrompu").
+   Placeholder and typed text are centred. */
+.field{position:relative}
+.field::after{content:"";position:absolute;inset:0;border-radius:var(--r-pill);border:var(--bw) solid var(--line-strong);pointer-events:none}
 .waitlist .field input{border-color:transparent;text-align:center}
 /* no fill: the field is frosted glass. Only a blur of whatever is behind it (the video), plus the outline.
    backdrop-filter needs the -webkit- form for older Safari. */

@@ -19,7 +19,7 @@ const HEADERS = ['Date', 'Prénom', 'Nom', 'Email', 'Consentement', 'Source', 'P
 const COL_MAIL = 9, COL_LAYLO = 10;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-// --- Laylo : la liste d'envoi. La clé API est dans Paramètres du projet > Propriétés du script > LAYLO_API_KEY (jamais dans le code) ---
+// --- Laylo : la liste d'envoi. La clé API est dans Paramètres du projet > Propriétés du script > LAYLO_API_KEY_2 (jamais dans le code) ---
 const LAYLO_URL = 'https://laylo.com/api/graphql';
 const TEST_LAYLO_EMAIL = 'yannlemousse+laylo@gmail.com';
 
@@ -98,9 +98,9 @@ function doPost(e) {
     ]);
     const row = sheet.getLastRow();
 
-    // Laylo puis mail de bienvenue : jamais bloquants pour l'inscription ; le résultat de chacun est noté dans le Sheet
+    // Laylo (liste d'envoi) : jamais bloquant pour l'inscription ; le résultat de chacun est noté dans le Sheet
     const laylo = subscribeLaylo_(email);
-    const mail = sendWelcome_(email);
+    const mail = 'via Laylo';   // le mail de bienvenue et les envois partent de Laylo, plus de Gmail (sendWelcome_ reste pour testWelcome)
     sheet.getRange(row, COL_MAIL).setValue(mail);
     sheet.getRange(row, COL_LAYLO).setValue(laylo);
 
@@ -120,7 +120,7 @@ function doGet() {
 
 /** Inscrit l'email dans la liste Laylo. Retourne 'ok', 'non configuré', 'erreur 401' (clé refusée)… La clé n'est jamais écrite dans les journaux. */
 function subscribeLaylo_(email) {
-  const key = PropertiesService.getScriptProperties().getProperty('LAYLO_API_KEY');
+  const key = PropertiesService.getScriptProperties().getProperty('LAYLO_API_KEY_2');
   if (!key) return 'non configuré';
   try {
     const res = UrlFetchApp.fetch(LAYLO_URL, {

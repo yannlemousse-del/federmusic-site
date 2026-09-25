@@ -118,7 +118,7 @@ Pour changer de vidéo, remplacer le fichier en gardant le même nom (idéalemen
 
 Chaque nouvelle inscription est aussi envoyée à **Laylo** (compte « Federation ») par l'API, depuis le script Apps Script (`subscribeLaylo_`). Le résultat est noté dans la colonne « Laylo » du Sheet (`ok`, `non configuré`, `erreur 401`…).
 
-- **Clé API :** dans l'éditeur Apps Script, *Paramètres du projet → Propriétés du script → `LAYLO_API_KEY`*. Elle n'est jamais dans le code ni dans le dépôt. Pour la changer : regénérer une clé dans Laylo (*Settings → Integrations → API Keyring*) et remplacer la valeur.
+- **Clé API :** dans l'éditeur Apps Script, *Paramètres du projet → Propriétés du script → `LAYLO_API_KEY_2`*. Elle n'est jamais dans le code ni dans le dépôt. Pour la changer : regénérer une clé dans Laylo (*Settings → Integrations → API Keyring*) et remplacer la valeur.
 - **Un seul identifiant par appel :** Laylo ne reçoit que l'email (pas le prénom ni le nom, qui restent dans le Sheet).
 - **Fonctions à lancer à la main** (menu Exécuter de l'éditeur) : `testLaylo` (inscrit `yannlemousse+laylo@gmail.com` pour tester) et `resyncLaylo` (retente les lignes dont la colonne « Laylo » commence par « erreur »).
 - **Autorisation :** l'appel à Laylo demande l'accès « services externes » du compte Federation, à accorder une fois (voir la note sur la fenêtre d'autorisation plus haut).

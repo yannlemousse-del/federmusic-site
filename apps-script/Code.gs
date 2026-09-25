@@ -19,7 +19,7 @@ const HEADERS = ['Date', 'Prénom', 'Nom', 'Email', 'Consentement', 'Source', 'P
 const COL_MAIL = 9, COL_LAYLO = 10;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-// --- Laylo : la liste d'envoi. La clé API est dans Paramètres du projet > Propriétés du script > LAYLO_API_KEY (jamais dans le code) ---
+// --- Laylo : la liste d'envoi. La clé API est dans Paramètres du projet > Propriétés du script > LAYLO_API_KEY_2 (jamais dans le code) ---
 const LAYLO_URL = 'https://laylo.com/api/graphql';
 const TEST_LAYLO_EMAIL = 'yannlemousse+laylo@gmail.com';
 
@@ -77,70 +77,71 @@ const MAIL_HTML = `<!DOCTYPE html>
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background:#000000;">
+<body style="margin:0;padding:0;background:#000000;text-align:center;">
+<center style="width:100%;background:#000000;">
 <!-- texte d'aperçu (visible dans la liste des mails, invisible dans le mail) -->
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#000000;font-size:1px;line-height:1px;">
   Tu passes avant les autres. Save the date : 16 janvier 2027, FEDER x PHANTOM PARIS.
 </div>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#000000" style="background:#000000;">
-<tr><td align="center" style="padding:0;">
+<tr><td align="center" style="text-align:center;padding:0;">
 
-  <table role="presentation" class="wrap" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#000000" style="width:600px;max-width:600px;background:#000000;">
+  <table role="presentation" class="wrap" align="center" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#000000" style="margin:0 auto;width:600px;max-width:600px;background:#000000;">
 
     <!-- logo -->
-    <tr><td align="center" class="pad" style="padding:38px 30px 6px 30px;">
-      <img src="{{LOGO_URL}}" width="540" alt="FEDERATION" style="display:block;width:100%;max-width:540px;height:auto;border:0;outline:none;text-decoration:none;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:38px 30px 6px 30px;">
+      <img src="{{LOGO_URL}}" width="540" alt="FEDERATION" style="display:block;margin:0 auto;width:100%;max-width:540px;height:auto;border:0;outline:none;text-decoration:none;">
     </td></tr>
 
     <!-- titre -->
-    <tr><td align="center" class="pad" style="padding:34px 30px 0 30px;">
-      <h1 class="h1" style="margin:0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:38px;line-height:42px;font-weight:800;letter-spacing:-0.5px;text-transform:uppercase;color:#ffffff;">Welcome to the fam&rsquo;.</h1>
+    <tr><td align="center" class="pad" style="text-align:center;padding:34px 30px 0 30px;">
+      <h1 class="h1" style="margin:0;text-align:center;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:38px;line-height:42px;font-weight:800;letter-spacing:-0.5px;text-transform:uppercase;color:#ffffff;">Welcome to the fam&rsquo;.</h1>
     </td></tr>
-    <tr><td align="center" class="pad" style="padding:18px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#e6e6e6;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:18px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#e6e6e6;">
       Tu fais maintenant partie de FEDERATION.
     </td></tr>
 
     <!-- filet -->
-    <tr><td align="center" style="padding:44px 30px 0 30px;"><table role="presentation" width="40" cellpadding="0" cellspacing="0" border="0"><tr><td height="1" style="height:1px;line-height:1px;font-size:1px;background:#3a3a3a;">&nbsp;</td></tr></table></td></tr>
+    <tr><td align="center" style="text-align:center;padding:44px 30px 0 30px;"><table role="presentation" align="center" width="40" style="margin:0 auto;" cellpadding="0" cellspacing="0" border="0"><tr><td height="1" style="height:1px;line-height:1px;font-size:1px;background:#3a3a3a;">&nbsp;</td></tr></table></td></tr>
 
     <!-- save the date -->
-    <tr><td align="center" class="pad" style="padding:38px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#ffffff;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:38px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#ffffff;">
       Save the date
     </td></tr>
-    <tr><td align="center" class="pad" style="padding:14px 30px 0 30px;">
-      <div class="date" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:38px;line-height:42px;font-weight:800;letter-spacing:-0.5px;text-transform:uppercase;color:#ffffff;">16 janvier 2027</div>
+    <tr><td align="center" class="pad" style="text-align:center;padding:14px 30px 0 30px;">
+      <div class="date" style="text-align:center;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:38px;line-height:42px;font-weight:800;letter-spacing:-0.5px;text-transform:uppercase;color:#ffffff;">16 janvier 2027</div>
     </td></tr>
-    <tr><td align="center" class="pad" style="padding:12px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:12px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">
       Feder <span style="text-transform:none;">x</span> Phantom Paris
     </td></tr>
 
     <!-- filet -->
-    <tr><td align="center" style="padding:44px 30px 0 30px;"><table role="presentation" width="40" cellpadding="0" cellspacing="0" border="0"><tr><td height="1" style="height:1px;line-height:1px;font-size:1px;background:#3a3a3a;">&nbsp;</td></tr></table></td></tr>
+    <tr><td align="center" style="text-align:center;padding:44px 30px 0 30px;"><table role="presentation" align="center" width="40" style="margin:0 auto;" cellpadding="0" cellspacing="0" border="0"><tr><td height="1" style="height:1px;line-height:1px;font-size:1px;background:#3a3a3a;">&nbsp;</td></tr></table></td></tr>
 
     <!-- avantages -->
-    <tr><td align="center" class="pad" style="padding:38px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#e6e6e6;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:38px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#e6e6e6;">
       &Agrave; partir de maintenant, tu passes avant les autres.
     </td></tr>
-    <tr><td align="center" class="pad" style="padding:30px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:21px;line-height:40px;font-weight:700;color:#ffffff;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:30px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:21px;line-height:40px;font-weight:700;color:#ffffff;">
       <span class="big">Acc&egrave;s anticip&eacute;s.</span><br>
       <span class="big">Tickets prioritaires.</span><br>
       <span class="big">Invitations.</span><br>
       <span class="big">Surprises.</span>
     </td></tr>
 
-    <tr><td align="center" class="pad" style="padding:36px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#e6e6e6;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:36px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#e6e6e6;">
       Certaines choses ne seront annonc&eacute;es qu&rsquo;ici.
     </td></tr>
 
     <!-- signature -->
-    <tr><td align="center" class="pad" style="padding:38px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:21px;line-height:28px;font-weight:700;color:#ffffff;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:38px 30px 0 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:21px;line-height:28px;font-weight:700;color:#ffffff;">
       Stay close.
     </td></tr>
-    <tr><td align="center" style="padding:14px 30px 0 30px;"><table role="presentation" width="28" cellpadding="0" cellspacing="0" border="0"><tr><td height="2" style="height:2px;line-height:2px;font-size:1px;background:#2eff00;">&nbsp;</td></tr></table></td></tr>
+    <tr><td align="center" style="text-align:center;padding:14px 30px 0 30px;"><table role="presentation" align="center" width="28" style="margin:0 auto;" cellpadding="0" cellspacing="0" border="0"><tr><td height="2" style="height:2px;line-height:2px;font-size:1px;background:#2eff00;">&nbsp;</td></tr></table></td></tr>
 
     <!-- pied de page -->
-    <tr><td align="center" class="pad" style="padding:64px 30px 44px 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:18px;color:#8a8a8a;">
+    <tr><td align="center" class="pad" style="text-align:center;padding:64px 30px 44px 30px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:18px;color:#8a8a8a;">
       Tu re&ccedil;ois cet email car tu t&rsquo;es inscrit(e) sur <a href="https://federmusic.com" style="color:#b5b5b5;text-decoration:underline;">federmusic.com</a>.<br>
       Pour te d&eacute;sinscrire, r&eacute;ponds simplement &laquo;&nbsp;STOP&nbsp;&raquo; &agrave; ce mail.<br><br>
       Artiworks &middot; 44 rue Catherine de la Rochefoucauld &middot; 75009 Paris
@@ -150,6 +151,7 @@ const MAIL_HTML = `<!DOCTYPE html>
 
 </td></tr>
 </table>
+</center>
 </body>
 </html>
 `;
@@ -193,9 +195,9 @@ function doPost(e) {
     ]);
     const row = sheet.getLastRow();
 
-    // Laylo puis mail de bienvenue : jamais bloquants pour l'inscription ; le résultat de chacun est noté dans le Sheet
+    // Laylo (liste d'envoi) : jamais bloquant pour l'inscription ; le résultat de chacun est noté dans le Sheet
     const laylo = subscribeLaylo_(email);
-    const mail = sendWelcome_(email);
+    const mail = 'via Laylo';   // le mail de bienvenue et les envois partent de Laylo, plus de Gmail (sendWelcome_ reste pour testWelcome)
     sheet.getRange(row, COL_MAIL).setValue(mail);
     sheet.getRange(row, COL_LAYLO).setValue(laylo);
 
@@ -215,7 +217,7 @@ function doGet() {
 
 /** Inscrit l'email dans la liste Laylo. Retourne 'ok', 'non configuré', 'erreur 401' (clé refusée)… La clé n'est jamais écrite dans les journaux. */
 function subscribeLaylo_(email) {
-  const key = PropertiesService.getScriptProperties().getProperty('LAYLO_API_KEY');
+  const key = PropertiesService.getScriptProperties().getProperty('LAYLO_API_KEY_2');
   if (!key) return 'non configuré';
   try {
     const res = UrlFetchApp.fetch(LAYLO_URL, {

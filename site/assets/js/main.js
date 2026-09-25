@@ -38,11 +38,9 @@
       throw new Error('endpoint manquant');
     }
     // Pas de header personnalisé → requête « simple », pas de préflight CORS avec Apps Script.
-    const res = await fetch(cfg.signupEndpoint, {
-      method: 'POST',
-      body: new URLSearchParams(payload)
-    });
-    return res.json();
+    const post = async () => (await fetch(cfg.signupEndpoint, { method: 'POST', body: new URLSearchParams(payload) })).json();
+    try { return await post(); }
+    catch (_) { await new Promise(r => setTimeout(r, 1500)); return post(); }   // une seule reprise (réseau mobile instable)
   }
 
   /* ---------- validation : premier champ fautif -> secousse + message ---------- */
@@ -93,21 +91,35 @@
     // la requête part en même temps que l'animation ; on attend les deux avant de conclure
     const request = send(payload).then(out => ({ out }), err => ({ err }));
 
+    // Le serveur Google met parfois plusieurs secondes à répondre : on n'attend pas plus de WAIT_MS après la fumée,
+    // on affiche la confirmation et l'envoi continue. S'il échoue finalement, le formulaire revient avec ses données.
+    const WAIT_MS = 2000;
+    const fail = (why) => {
+      console.error('[feder] inscription échouée', why);
+      btn.disabled = false;
+      if (dissolve) dissolve.reopen(form, true); else btn.classList.remove('is-dissolving');
+      form.prenom.value = payload.prenom; form.nom.value = payload.nom; form.email.value = payload.email;
+      say('Une erreur est survenue. Réessaie dans un instant.', 'error');
+    };
     const finish = async () => {
       say('Enregistrement…');
-      const { out, err } = await request;
+      const early = await Promise.race([request, new Promise(r => setTimeout(() => r(null), WAIT_MS))]);
       btn.disabled = false;
-      if (err || !out || !out.ok) {        // échec : le formulaire revient tel quel, avec ce qui était saisi
-        console.error('[feder] inscription échouée', err || out);
+      if (early && (early.err || !early.out || !early.out.ok)) {   // échec rapide : le formulaire revient tel quel
+        console.error('[feder] inscription échouée', early.err || early.out);
         if (dissolve) dissolve.restore(form); else btn.classList.remove('is-dissolving');
         say('Une erreur est survenue. Réessaie dans un instant.', 'error');
         return;
       }
       say('');
       form.reset();
-      const message = out.duplicate ? MSG_DUPLICATE : MSG_OK;
+      const message = early && early.out.duplicate ? MSG_DUPLICATE : MSG_OK;
       if (dissolve) dissolve.showDone(form, message);
       else { btn.classList.remove('is-dissolving'); say(message, 'ok'); }
+      if (!early) request.then(({ out, err }) => {                  // réponse tardive
+        if (err || !out || !out.ok) fail(err || out);
+        else if (out.duplicate) { const m = form.querySelector('.done-msg'); if (m) m.textContent = MSG_DUPLICATE; }
+      });
     };
 
     // tout le formulaire part en fumée (le bouton avec l'effet du skill, le reste en vague)

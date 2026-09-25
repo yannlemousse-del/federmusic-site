@@ -110,6 +110,6 @@ Le Sheet sert de base de contacts. Pour envoyer, on peut exporter la colonne Ema
 - `autoplay` : elle se lance dès l'ouverture de la page ;
 - `playsinline` : sur iPhone, elle ne s'ouvre pas en plein écran.
 
-**Boucle sans à-coup :** `background.js` lance une seconde copie de la vidéo 1,4 s avant la fin de la première et la fait apparaître en fondu enchaîné (constante `FADE` en haut du fichier). La boucle native (`loop`) reste active en filet de sécurité, et sans JavaScript la vidéo tourne quand même. Pour une boucle parfaitement propre, on peut aussi exporter la vidéo avec un début et une fin identiques.
+**Boucle sans à-coup :** `background.js` lance une seconde copie de la vidéo 2,1 s avant la fin de la première (fondu de 1,4 s + 0,7 s de marge) et la fait apparaître en fondu enchaîné (constante `FADE` en haut du fichier). La boucle native (`loop`) reste active en filet de sécurité, et sans JavaScript la vidéo tourne quand même. Pour une boucle parfaitement propre, on peut aussi exporter la vidéo avec un début et une fin identiques.
 
 Pour changer de vidéo, remplacer le fichier en gardant le même nom (idéalement < 5 Mo, en H.264/MP4). Un voile sombre (`.bg-scrim` dans `style.css`, opacité 0.5) garde le texte lisible : l'ajuster si la nouvelle vidéo est plus claire ou plus sombre. Si le visiteur a demandé « moins d'animations » sur son appareil, la vidéo reste sur sa première image.

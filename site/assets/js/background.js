@@ -13,6 +13,8 @@
    - laisser la vidéo à l'arrêt si l'utilisateur a demandé moins d'animations. */
 (() => {
   const FADE = 1.4;                     // durée du fondu enchaîné, en secondes
+  const LEAD = 0.7;                     // marge : le fondu démarre plus tôt et se termine ~0,5 s AVANT la fin de la vidéo sortante,
+                                        // pour qu'elle ne reboucle jamais (image qui saute) sous un fondu inachevé
 
   const a = document.querySelector('.bg-video');
   if (!a) return;
@@ -65,10 +67,10 @@
   function tick() {
     if (reduced.matches || document.hidden || !cur.duration || cur.paused) return;
     if (!fading) {
-      if (cur.currentTime >= cur.duration - FADE) begin();
+      if (cur.currentTime >= cur.duration - FADE - LEAD) begin();
     } else if (nxt.paused && nxt.currentTime === 0 && cur.currentTime > cur.duration - 0.05) {
       abort();                          // la seconde copie n'a pas démarré : la boucle native prend le relais
-    } else if (nxt.currentTime >= FADE) {
+    } else if (nxt.currentTime >= FADE + 0.2) {   // le fondu est terminé (+ petite marge pour le démarrage de la lecture)
       finish();
     }
   }

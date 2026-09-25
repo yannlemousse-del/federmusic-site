@@ -186,3 +186,22 @@ img.brand-mark{width:150px;height:auto;opacity:.78;user-select:none;-webkit-user
 .notfound h1{font-family:var(--font-display);text-transform:uppercase;line-height:.92;font-size:clamp(46px,13vw,92px)}
 .notfound .waitlist-submit{display:inline-flex;align-items:center;justify-content:center;width:auto;padding:0 28px;margin-top:0}
 .notfound .hairline{margin:26px auto 28px}
+
+/* ---------- entrée de page (intro.js) ----------
+   Avant .intro-go : tout est masqué. Le wordmark est révélé par le canvas de fumée puis en fondu ;
+   les autres blocs entrent ensuite l'un après l'autre. Filet de sécurité : si intro.js ne tourne pas,
+   tout devient visible après 4 s. Avec « moins d'animations » : visible tout de suite. */
+.js .card > *{opacity:0;filter:blur(6px);animation:intro-failsafe .01s 4s forwards}
+.js .card > .brand-stack{filter:blur(10px)}
+.js.intro-go .card > *{opacity:1;filter:none;animation:none;
+  transition:opacity 1s ease var(--rd,0ms),filter 1.1s ease var(--rd,0ms)}
+.js.intro-go .card > .brand-stack{--rd:0ms;transition-duration:1.2s,1.4s}
+.js.intro-go .card > .brand-mark{--rd:150ms}
+.js.intro-go .card > .edge-top{--rd:650ms}
+.js.intro-go .card > .marquee{--rd:1000ms}
+.js.intro-go .card > .waitlist{--rd:1350ms}
+.js.intro-go .card > .edge-bottom{--rd:1700ms}
+@keyframes intro-failsafe{to{opacity:1;filter:none}}
+@media (prefers-reduced-motion:reduce){
+  .js .card > *{opacity:1;filter:none;animation:none}
+}

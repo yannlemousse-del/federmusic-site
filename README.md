@@ -64,7 +64,7 @@ Le script refuse les emails invalides, ignore les doublons (même email) et neut
 
 ## Avant la mise en ligne
 
-- [ ] Compléter `site/mentions-legales.html` et `site/confidentialite.html` (repérer les `[…]` soulignés en pointillés).
+- [x] `site/mentions-legales.html` et `site/confidentialite.html` remplis (Artiworks, directeur de la publication, email de contact). Reste à ajouter dans les mentions légales : forme juridique, capital, SIRET/RCS et téléphone (voir le commentaire HTML dans le fichier).
 - [ ] Vérifier le contenu de l'événement dans `site/index.html` (date, lieu, textes : ce sont ceux de l'exemple du skill).
 - [x] Image de partage `site/assets/img/og-image.jpg` (1200×630, JPEG 98 %) branchée dans `site/index.html` (og:image + twitter:card).
 - [x] `signupEndpoint` renseigné dans `config.js` (Sheet branché et testé).

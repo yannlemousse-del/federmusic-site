@@ -10,7 +10,10 @@ feder-site/
 ├── README.md
 ├── .github/workflows/pages.yml   publie le dossier site/ à chaque push sur main
 ├── apps-script/
-│   └── Code.gs                   script Google Apps Script (non publié sur le site)
+│   ├── Code.template.gs          script Apps Script : inscription + mail de bienvenue (source à éditer)
+│   ├── welcome-email.html        gabarit du mail de bienvenue (source à éditer)
+│   ├── build-code.js             assemble les deux ci-dessus dans Code.gs (node apps-script/build-code.js)
+│   └── Code.gs                   fichier généré, à coller dans l'éditeur Apps Script (non publié sur le site)
 └── site/                         ← tout ce qui est en ligne
     ├── index.html                page unique (carte : nom, date, formulaire)
     ├── mentions-legales.html     à compléter (repérer les [...] en pointillés)
@@ -44,7 +47,15 @@ Tant que `signupEndpoint` est vide dans `assets/js/config.js`, le formulaire est
 
 ## Brancher le Google Sheet
 
-> **État actuel : déjà branché.** Le Sheet « Feder - Newsletter » reçoit les inscriptions via le script Apps Script « Feder Newsletter », déployé en application Web (exécuté en tant que le propriétaire du Sheet, accès « Tout le monde »). L'URL du déploiement est déjà dans `site/assets/js/config.js`. Les étapes ci-dessous servent à refaire l'opération ailleurs (autre compte, autre Sheet).
+> **État actuel : déjà branché, sous le compte Federation.fam.music@gmail.com.** Le Sheet « Feder - Newsletter » et le projet Apps Script « Feder Newsletter » (projet indépendant, qui ouvre le Sheet par son identifiant) appartiennent à ce compte. Le script est déployé en application Web (exécuté en tant que ce compte, accès « Tout le monde »). L'URL du déploiement est dans `site/assets/js/config.js`. Chaque nouvelle inscription reçoit le **mail de bienvenue**, envoyé depuis Federation.fam.music@gmail.com (expéditeur « FEDERATION ») ; le résultat est noté dans la colonne « Mail » du Sheet.
+>
+> **Limites du mail :** 100 mails par jour avec un compte Gmail gratuit (garde-fou du script : 30 par heure). Au-delà, l'inscription est enregistrée mais le mail n'est pas envoyé (colonne « Mail » = `limite` ou `quota`). Pour un envoi plus important, passer à un service d'emailing (Brevo…) ou à Google Workspace.
+>
+> **Modifier le mail ou le script :** éditer `welcome-email.html` ou `Code.template.gs`, lancer `node apps-script/build-code.js`, coller le nouveau `Code.gs` dans l'éditeur Apps Script, puis **Déployer → Gérer les déploiements → modifier → Nouvelle version** (l'URL ne change pas). La fonction `testWelcome` (menu Exécuter) envoie un exemple du mail à yannlemousse@gmail.com. Le logo du mail est `site/assets/img/mail-logo.png`, servi par le site.
+>
+> **Autorisation Google :** avec plusieurs comptes Google connectés dans le même navigateur, la fenêtre d'autorisation d'Apps Script peut afficher « Page introuvable ». Contournement : faire l'autorisation dans une fenêtre de navigation privée où seul le compte concerné est connecté.
+>
+> Les étapes ci-dessous servent à refaire l'opération ailleurs (autre compte, autre Sheet).
 
 1. Créer un Google Sheet vide (ex. « Feder – Newsletter »).
 2. **Extensions → Apps Script**. Supprimer le contenu, coller [`apps-script/Code.gs`](apps-script/Code.gs), enregistrer.
@@ -56,11 +67,11 @@ Tant que `signupEndpoint` est vide dans `assets/js/config.js`, le formulaire est
 6. Ouvrir l'URL `/exec` dans un navigateur : elle doit répondre `{"ok":true,"service":"feder-newsletter"}`.
 7. Remplir le formulaire sur le site : une ligne apparaît dans l'onglet **Inscrits** (créé automatiquement avec ses en-têtes).
 
-Les inscriptions arrivent dans l'onglet **Inscrits** (le seul onglet du Sheet). Colonnes : Date · Prénom · Nom · Email · Consentement · Source · Page · Statut.
+Les inscriptions arrivent dans l'onglet **Inscrits** (le seul onglet du Sheet). Colonnes : Date · Prénom · Nom · Email · Consentement · Source · Page · Statut · Mail.
 
 > Si le code du script change plus tard : **Déployer → Gérer les déploiements → modifier → Nouvelle version**. L'URL reste la même.
 
-Le script refuse les emails invalides, ignore les doublons (même email) et neutralise les injections de formules Google Sheets. Le formulaire contient aussi un champ anti-bot invisible.
+Le script refuse les emails invalides, ignore les doublons (même email : pas de nouvelle ligne, pas de nouveau mail) et neutralise les injections de formules Google Sheets. Le formulaire contient aussi un champ anti-bot invisible.
 
 ## Avant la mise en ligne
 
